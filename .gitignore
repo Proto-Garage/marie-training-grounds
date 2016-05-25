@@ -1,2 +1,4 @@
 #Editor Config
 .editorconfig
+
+/koa-server/node_modules/
