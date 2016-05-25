@@ -1,0 +1,18 @@
+{
+  "name": "koa-server",
+  "version": "0.0.1",
+  "description": "This is a server for Real Time Task Manager Application.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "koa",
+    "server"
+  ],
+  "author": "switmac",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.0.0"
+  }
+}
