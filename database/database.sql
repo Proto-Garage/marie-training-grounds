@@ -4,9 +4,9 @@ DROP FUNCTION IF EXISTS create_task(
   varchar,
   varchar,
   varchar[],
-  varchar,
   varchar
 );
+DROP FUNCTION IF EXISTS retrieve_task();
 DROP FUNCTION IF EXISTS update_task(
   int,
   varchar,
@@ -15,6 +15,7 @@ DROP FUNCTION IF EXISTS update_task(
   varchar,
   varchar
 );
+DROP FUNCTION IF EXISTS delete_task(int);
 
 CREATE TABLE task(
   id int,
@@ -34,7 +35,6 @@ CREATE FUNCTION create_task(
   this_title varchar,
   this_description varchar,
   this_labels varchar[],
-  this_status varchar,
   this_priority varchar
 ) RETURNS TABLE (
   id int,
@@ -59,18 +59,47 @@ CREATE FUNCTION create_task(
       priority,
       date_time
     ) VALUES (
+      this_id,
       this_title,
       this_description,
       this_labels,
-      this_status,
+      'TO-DO',
       this_priority,
       now()
     );
 
     RETURN QUERY
-      SELECT *
+      SELECT
+        A.id,
+        A.title,
+        A.description,
+        A.labels,
+        A.status,
+        A.priority
       FROM task AS A
       WHERE A.id = this_id;
+  END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION retrieve_task()
+RETURNS TABLE (
+  id int,
+  title varchar,
+  description varchar,
+  labels varchar[],
+  status varchar,
+  priority varchar
+) AS $$
+  BEGIN
+    RETURN QUERY
+      SELECT
+        A.id,
+        A.title,
+        A.description,
+        A.labels,
+        A.status,
+        A.priority
+      FROM task AS A;
   END;
 $$ LANGUAGE plpgsql;
 
@@ -103,5 +132,15 @@ CREATE FUNCTION update_task(
       SELECT *
       FROM task
       WHERE id = this_id;
+  END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION delete_task(
+  this_task_id int
+) RETURNS BOOLEAN
+AS $$
+  BEGIN
+    DELETE FROM task
+    WHERE A.task_id = this_task_id;
   END;
 $$ LANGUAGE plpgsql;
